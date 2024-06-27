@@ -23,7 +23,7 @@ public class CompteBancaire {
     private CompteStatus status;
     @ManyToOne
     private Client client;
-    @OneToMany(mappedBy = "compteBancaire")
+    @OneToMany(mappedBy = "compteBancaire", fetch = FetchType.EAGER)
     private List<Operations> compteList;
 
 }

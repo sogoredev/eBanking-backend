@@ -1,9 +1,6 @@
 package com.cra.ebanking;
 
-import com.cra.ebanking.entites.Client;
-import com.cra.ebanking.entites.CompteCourant;
-import com.cra.ebanking.entites.CompteEpargne;
-import com.cra.ebanking.entites.Operations;
+import com.cra.ebanking.entites.*;
 import com.cra.ebanking.enums.CompteStatus;
 import com.cra.ebanking.enums.OperationType;
 import com.cra.ebanking.repositories.ClientRepository;
@@ -27,6 +24,34 @@ public class EBankingApplication {
     }
 
     @Bean
+    CommandLineRunner commandLineRunner(ClientRepository clientRepository,
+                            CompteRepository compteRepository,
+                            OperationRepository operationRepository) {
+        return args -> {
+            CompteBancaire compteBancaire = compteRepository.findById("06256ba4-cf9c-4b09-b3bc-e922c559bc5d").orElse(null);
+            if (compteBancaire != null) {
+                System.out.println("======================================");
+                System.out.println(compteBancaire.getId()+"id----------");
+                System.out.println(compteBancaire.getSolde());
+                System.out.println(compteBancaire.getClient().getNom());
+                System.out.println(compteBancaire.getDateCreatrion());
+                System.out.println(compteBancaire.getClass().getSimpleName());
+                if (compteBancaire instanceof CompteCourant) {
+                    System.out.println("Decouvert  "+((CompteCourant)compteBancaire).getDecouvert());
+                } else if (compteBancaire instanceof CompteEpargne) {
+                    System.out.println("Taux "+((CompteEpargne)compteBancaire).getTauxInteret());
+                }
+
+                compteBancaire.getCompteList().forEach(operations -> {
+                    System.out.println("========================");
+                    System.out.println(operations.getType());
+                    System.out.println(operations.getMontant());
+                    System.out.println(operations.getDateOperation());
+                });
+            }
+        };
+    };
+//    @Bean
     CommandLineRunner start(ClientRepository clientRepository,
                             CompteRepository compteRepository,
                             OperationRepository operationRepository) {
